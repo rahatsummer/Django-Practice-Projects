@@ -83,7 +83,13 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this book."""
+        return reverse('book-detail', args=[str(self.id)])
+    
+    def display_genre(self):
+        """Create a string for the Genre. This is required to display genre in Admin."""
+        return ', '.join(genre.name for genre in self.genre.all()[:3])
 
+        display_genre.short_description = 'Genre'
 
 class BookInstance(models.Model):
 
@@ -91,9 +97,10 @@ class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                           help_text="Unique ID for this particular book across whole library")
     book = models.ForeignKey('Book', on_delete=models.RESTRICT, null=True)
-    imprint = models.CharField(max_length=200)
-    due_back = models.DateField(null=True, blank=True)
-
+    imprint = models.CharField(max_length=200) # Usually used to record publisher, edition, or printing info.
+    due_back = models.DateField(null=True, blank=True) # Represents the date a borrowed book copy must be returned to the library.
+                                                       # Only relevant when the book is on loan
+    
     LOAN_STATUS = (
         ('m', 'Maintenance'),
         ('o', 'On loan'),

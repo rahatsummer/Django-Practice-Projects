@@ -13,5 +13,6 @@ git push -u origin main
 git remote add origin https://github.com/rahatsummer/Django-Practice-Projects.git
 git add .
 git rm -r --cached venv
+git commit -m " Any Messages "
 git branch -M main
 git push -u origin main
