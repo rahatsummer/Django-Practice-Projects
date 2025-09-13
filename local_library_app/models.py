@@ -48,12 +48,18 @@ class Author(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.last_name}, {self.first_name}'
+
+class Language(models.Model):
+    name = models.CharField(max_length=200, help_text="Enter the book's language (e.g. English, Farsi, French)")
+
+    def __str__(self):
+        return self.name
     
 
 class Book(models.Model):
     """Model representing a book (but not a specific copy of a book)."""
     title = models.CharField(max_length=200)
-    authors = models.ManyToManyField('Author', null=True)
+    authors = models.ManyToManyField('Author', blank=True)
     # Foreign Key used because book can only have one author, but authors can have multiple books.
     # Author as a string rather than object because it hasn't been declared yet in file.
 
@@ -69,6 +75,8 @@ class Book(models.Model):
     genre = models.ManyToManyField(
         Genre, help_text="Select a genre for this book")
 
+    language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
+    
     def __str__(self):
         """String for representing the Model object."""
         return self.title
