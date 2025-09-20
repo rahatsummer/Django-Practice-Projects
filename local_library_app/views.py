@@ -1,7 +1,9 @@
+from django.http import Http404
 from django.shortcuts import render
 
 # Create your views here.
 from .models import Book, Author, BookInstance, Genre
+from django.views import generic
 
 def index(request):
     """View function for home page of site."""
@@ -25,3 +27,25 @@ def index(request):
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+class BookListView(generic.ListView):
+    model = Book
+    paginate_by = 2
+
+class BookDetailView(generic.DetailView):
+    model = Book
+
+def book_detail_view(request, primary_key):
+    try:
+        book = Book.objects.get(pk=primary_key)
+    except Book.DoesNotExist:
+        raise Http404('Book does not exist')
+
+    return render(request, 'local_library_app/book_detail.html', context={'book': book})
+
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 2
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
